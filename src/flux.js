@@ -24,6 +24,7 @@ Flux.prototype._linksToStreams = function(list){
 	}
 }
 
+/*URL -> Stream*/
 Flux.prototype._newStreamFromLink = function(link,index){
 	/*link is only soundcloud for now*/
 	var args = {
@@ -34,6 +35,7 @@ Flux.prototype._newStreamFromLink = function(link,index){
 	return new Stream_Soundcloud(args);
 }
 
+/*Manage stream events*/
 Flux.prototype._eventManager = function(evt){
 	if(evt.msg === "Loaded"){
 		this.tracksLoaded++;
@@ -99,7 +101,7 @@ Flux.prototype.goToSong = function(song) {
 		this.togglePlay();
 };
 
-Flux.prototype.goToXSec = function(time){
+Flux.prototype.setPosition = function(time){
 
-	this.streams[this.currentTrack].setPosition(time*1000);
+	this.streams[this.currentTrack].setPosition(time);
 };
