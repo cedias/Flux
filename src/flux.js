@@ -1,57 +1,49 @@
 function Flux(args){
 
-	this.client_id = args.SCid;
-	SC.initialize({client_id:this.client_id});
-
+	this.soundcloud_client_id = args.SCid;
 	this.streams = [];
 	this.tracksLoaded = 0;
 	this.currentTrack = 0;
+	SC.initialize({client_id:this.soundcloud_client_id});
 
 	this.totalTracks = args.links.length;
 	this.autoplay = args.autoplay;
 	this.continuous = args.continuous;
-	this.tracks = this._linksToTracklist(args.links); // /!\ asynchronous
+
+	//Transform the links to streams
+	this._linksToStreams(args.links); // /!\ asynchronous
 
 }
 
-/*resolves a soundcloud track url's array*/
-Flux.prototype._linksToTracklist = function(list){
-	var tracks = [];
-	var self = this;
+/*Url array -> Stream array*/
+Flux.prototype._linksToStreams = function(list){
 
 	for(var i=0;i<list.length;i++){
-		SC.get("http://api.soundcloud.com/resolve",{url:list[i]}, function(track){
-			if(track.errors === undefined && track.kind === "track"){
-				tracks.push(track);
-				self._trackToStream(track);
-			}
-			else
-			{
-				console.log("Wrong Soundcloud link");
-				self.totalTracks--;
-			}
-		});
+		var stream = this._newStreamFromLink(list[i],i);
+		this.streams.push(stream);
 	}
-	return tracks;
 }
 
-Flux.prototype._trackToStream = function(track) {
-	var self = this;
-	var params = {}
+Flux.prototype._newStreamFromLink = function(link,index){
+	/*link is only soundcloud for now*/
+	var args = {
+		flux:this,
+		url:link,
+		index:index
+	};
+	return new Stream_Soundcloud(args);
+}
 
-	if(this.continuous)
-		params.onfinish = function(){self.nextSong()};
+Flux.prototype._eventManager = function(evt){
+	if(evt.msg === "Loaded"){
+		this.tracksLoaded++;
+		if(evt.index === 0 && this.autoplay)
+			this.togglePlay();
+	}
 
-	SC.stream("/tracks/"+track.id, params, function(sound){
-  		self.streams.push(sound);
-  		self.tracksLoaded++;
-
-  		if(self.tracksLoaded === self.totalTracks && self.autoplay){
-  			self.togglePlay();
-  		}
-	});
-};
-
+	if(evt.msg === "Song Ended")
+		this.nextSong();
+}
 
 /**			Controls			**/
 
@@ -62,7 +54,7 @@ Flux.prototype.stop = function() {
 
 Flux.prototype.togglePlay = function(){
 
-	this.streams[this.currentTrack].togglePause();
+	this.streams[this.currentTrack].togglePlay();
 	console.log("play:"+this.currentTrack);
 };
 
