@@ -14,7 +14,7 @@ function Stream_Soundcloud(args){
 
 Stream_Soundcloud.prototype._trackToStream = function(url) {
 	var self = this;
-	var params = {onfinish : function(){self.flux._eventManager({msg:"Song Ended",index:self.indexX})}};
+	var params = {onfinish : function(){self.flux._eventManager({msg:"Song Ended",index:self.index})}};
 	SC.get("http://api.soundcloud.com/resolve",{"url":url}, function(track){
 			if(track.errors === undefined && track.kind === "track"){
 				SC.stream("/tracks/"+track.id, params, function(sound){
