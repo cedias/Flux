@@ -1,9 +1,10 @@
 function Flux(args){
 
-	this.soundcloud_client_id = args.SCid;
 	this.streams = [];
 	this.tracksLoaded = 0;
 	this.currentTrack = 0;
+	
+	this.soundcloud_client_id = args.SCid;
 	SC.initialize({client_id:this.soundcloud_client_id});
 
 	this.totalTracks = args.links.length;
@@ -15,6 +16,7 @@ function Flux(args){
 
 }
 
+/**-------------------------- Private Methods ----------------------**/
 /*Url array -> Stream array*/
 Flux.prototype._linksToStreams = function(list){
 
@@ -26,7 +28,9 @@ Flux.prototype._linksToStreams = function(list){
 
 /*URL -> Stream*/
 Flux.prototype._newStreamFromLink = function(link,index){
-	/*link is only soundcloud for now*/
+	/*link is only soundcloud for now
+	Plan: Match w/ != Streams
+	*/
 	var args = {
 		flux:this,
 		url:link,
@@ -45,16 +49,33 @@ Flux.prototype._eventManager = function(evt){
 
 	if(evt.msg === "Song Ended")
 		this.nextSong();
+
+	if(evt.msg === "Error")
+		console.log("Error on Stream index "+evt.index+":"evt.err_msg);
 }
 
-/**			Controls			**/
+/**-------------------------- Flux Controls - Public Methods ------------------------ **/
 
+/**
+Streams interface:
+
+stream.stop() -> void //stops the stream (set stream position to 0) 
+stream.togglePlay() -> void //play if stream is paused/stopped and pauses 
+stream.setVolume(int volume:[0,100]:%)
+stream.getVolume()
+stream.setPosition(int position:seconds)
+stream.getPosition()
+**/
+
+/**  Delegations **/
 Flux.prototype.stop = function() {
 	this.streams[this.currentTrack].stop();
 	this.streams[this.currentTrack].setPosition(0);
 };
 
 Flux.prototype.togglePlay = function(){
+	if(this.streams[this.currentTrack].state === "Error")
+		this.next();
 
 	this.streams[this.currentTrack].togglePlay();
 	console.log("play:"+this.currentTrack);
@@ -68,7 +89,18 @@ Flux.prototype.setVolume = function(volume){
 		console.log("Error: volume [0;100] you gave "+volume);
 };
 
-Flux.prototype.nextSong = function(){
+Flux.prototype.setPosition = function(time){
+
+	this.streams[this.currentTrack].setPosition(time);
+};
+
+Flux.prototype.getPosition = function(){
+	this.streams[this.currentTrack].getPosition();
+};
+
+/*Flux Methods*/
+
+Flux.prototype.next = function(){
 
 	this.stop();
 	this.currentTrack = (this.currentTrack+1)%this.totalTracks;
@@ -77,7 +109,7 @@ Flux.prototype.nextSong = function(){
 		this.togglePlay();
 };
 
-Flux.prototype.previousSong = function(){
+Flux.prototype.previous = function(){
 
 	this.stop();
 	if(this.currentTrack !== 0)
@@ -89,7 +121,7 @@ Flux.prototype.previousSong = function(){
 		this.togglePlay();
 };
 
-Flux.prototype.goToSong = function(song) {
+Flux.prototype.selectStream = function(song) {
 
 	this.stop();
 	if(song >= 0 && song <= this.totalTracks-1)
@@ -99,9 +131,4 @@ Flux.prototype.goToSong = function(song) {
 
 	if(this.autoplay)
 		this.togglePlay();
-};
-
-Flux.prototype.setPosition = function(time){
-
-	this.streams[this.currentTrack].setPosition(time);
 };
