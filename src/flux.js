@@ -12,6 +12,7 @@ function Flux(args){
 	this.autostart = args.autostart;
 	this.repeat = args.repeat;
 	this.debug = args.debug;
+	this.onfinish = args.onfinish;
 
 	//Transform the links to streams
 	this._linksToStreams(args.links); // /!\ asynchronous
@@ -57,6 +58,8 @@ Flux.prototype._eventManager = function(evt){
 		{
 			this.next();
 		}
+		if(this.onfinish!= undefined)
+			this.onfinish();
 	}
 
 	if(evt.msg === "Error")
@@ -126,6 +129,7 @@ Flux.prototype.next = function(){
 
 	if(this.autoplay)
 		this.togglePlay();
+	return this.currentStream;
 };
 
 Flux.prototype.previous = function(){
@@ -138,16 +142,20 @@ Flux.prototype.previous = function(){
 
 	if(this.autoplay)
 		this.togglePlay();
+	return this.currentStream;
 };
 
 Flux.prototype.selectStream = function(song) {
+	if(this.streams[this.currentStream].streamable){
+		this.stop();
+		if(song >= 0 && song <= this.totalStreams-1)
+			this.currentStream = song
+		else
+			console.log("Error: wrong song number");
 
-	this.stop();
-	if(song >= 0 && song <= this.totalStreams-1)
-		this.currentStream = song
-	else
-		console.log("Error: wrong song number");
-
-	if(this.autoplay)
-		this.togglePlay();
+		if(this.autoplay)
+			this.togglePlay();
+		return true;
+	}
+	return false;
 };
