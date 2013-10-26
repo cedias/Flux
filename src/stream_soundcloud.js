@@ -63,15 +63,19 @@ Stream_Soundcloud.prototype.setVolume = function(volume){
 };
 
 Stream_Soundcloud.prototype.getVolume = function(){
-	return this.player.volume;
+    return this.player.volume;
 };
 
 Stream_Soundcloud.prototype.setPosition = function(time){
 
-	this.player.setPosition(time*1000);
-	return this.player.position;
+    this.player.setPosition(time*1000);
+    return this.player.position;
 };
 
 Stream_Soundcloud.prototype.getPosition = function(){
-	return this.player.position;
+    return this.player.position;
+};
+
+Stream_Soundcloud.prototype.getLength = function(){
+    return this.player.duration;
 };

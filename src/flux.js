@@ -2,11 +2,10 @@ function Flux(args){
 
 	this.streams = [];
 	this.tracksLoaded = 0;
-	this.currentStream = 0;
-	
-	this.soundcloud_client_id = args.SCid;
-	SC.initialize({client_id:this.soundcloud_client_id});
+        this.currentStream = 0;
+        this.errorStreamsIndex = [];
 
+	this.soundcloud_client_id = args.SCid;    
 	this.totalStreams = args.links.length;
 	this.autoplay = args.autoplay;
 	this.autostart = args.autostart;
@@ -34,6 +33,7 @@ Flux.prototype._newStreamFromLink = function(link,index){
 	/*link is only soundcloud for now
 	Plan: Match w/ != Streams
 	*/
+        SC.initialize({client_id:this.soundcloud_client_id});
 	var args = {
 		flux:this,
 		url:link,
@@ -62,8 +62,10 @@ Flux.prototype._eventManager = function(evt){
 			this.onfinish();
 	}
 
-	if(evt.msg === "Error")
+    if(evt.msg === "Error"){
+	this.errorStreamsIndex.push(evt.index);
 		console.log("Error on Stream index "+evt.index+":"+evt.err_msg);
+    }
 }
 
 /**-------------------------- Flux Controls - Public Methods ------------------------ **/
@@ -77,9 +79,10 @@ stream.setVolume(int volume:[0,100]:%)
 stream.getVolume()
 stream.setPosition(int position:seconds)
 stream.getPosition()
+stream.getLength();
 **/
 
-/**  Delegations **/
+/**------ Delegations-------- **/
 Flux.prototype.stop = function() {
 	if(this.streams[this.currentStream].streamable){
 		this.streams[this.currentStream].stop();
@@ -107,20 +110,22 @@ Flux.prototype.setVolume = function(volume){
 };
 
 Flux.prototype.getVolume = function(){
-	this.streams[this.currentStream].getVolume();
+	return this.streams[this.currentStream].getVolume();
 };
 
 Flux.prototype.setPosition = function(time){
-
-	this.streams[this.currentStream].setPosition(time);
+    this.streams[this.currentStream].setPosition(time);
 };
 
 Flux.prototype.getPosition = function(){
-	this.streams[this.currentStream].getPosition();
+    return this.streams[this.currentStream].getPosition();
 };
 
+Flux.prototype.getLength = function(){
+    return this.streams[this.currentStream].getLength();
+};
 
-/*Flux Methods*/
+/*------ Flux Methods------*/
 
 Flux.prototype.next = function(){
 
@@ -158,4 +163,8 @@ Flux.prototype.selectStream = function(song) {
 		return true;
 	}
 	return false;
+};
+
+Flux.prototype.getErrorStreams = function(){
+    return this.errorStreamsIndex;
 };
