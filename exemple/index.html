@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>Flux.me</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+		<div id="header" >
+			<h1>Flux</h1>
+			<div id="header_contrast">
+				<div id="duration"></div>
+				</div> 
+			</div>
+
+		<div id="controls">
+		<i id="previous" class="icon-backward icon-4x controls"></i>
+		<i id="play" class="icon-play icon-4x controls"> </i>
+		<i id="next" class="icon-forward icon-4x controls"> </i>
+		</div>
+		<p id="playing" class="container">	
+		</p>
+
+		<div id="clear_bg">
+			<div class="container">
+			  	<h3> Choose a song below.</h3>
+				<div id="tracks_div"> 
+					<ul id="tracks">
+						<li class="list-group-item track">https://soundcloud.com/waldemar-schwartz/park-lex</li>
+						<li class="list-group-item track">https://soundcloud.com/talkingcity1994/pas1123</li>
+						<li class="list-group-item track">https://soundcloud.com/thompost/spazzkid-forgiveness-thompost</li>
+						<li class="list-group-item track">https://soundcloud.com/fishing/fishing-choy-lin</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	
+		<div id="footer">
+			<h4> Flux library </h4>
+		</div>
+	</body>
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script src="http://connect.soundcloud.com/sdk.js"></script>
+	<script src="lib/flux.min.js"></script>
+	<script src="lib/stream_soundcloud.min.js"></script >
+	<script src="js/app.js"></script>
+</html>
