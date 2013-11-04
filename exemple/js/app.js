@@ -42,6 +42,7 @@ $(
 	});
 
 
+	/*List choosing*/
 	var items =  $('.track').on('click',function() {
 	    var index = items.index(this);
 	    player.selectStream(index);
@@ -54,17 +55,8 @@ $(
 	    var li = $(".track:eq("+index+")");
 	    $(".active").removeClass("active");
 	    li.addClass("active");
-	    $("#playing").html("<b>Playing:</b> " +li.html());
+	    $("#playing").html("<b>Playing:</b> <a href=\""+li.html()+"\">"+li.html()+"</a>");
 
 	}
-
-
-	function updateDuration(){
-	    var player = window.flxplayer;
-	    var val = Math.floor((player.getPosition()/player.getLength())*100);
-	    console.log("val: "+val);
-	    $("#duration").css({width: val+"%"});
-	}
-
 
     });
