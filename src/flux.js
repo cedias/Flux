@@ -167,3 +167,9 @@ Flux.prototype.selectStream = function(song) {
 Flux.prototype.getErrorStreams = function(){
     return this.errorStreamsIndex;
 };
+
+Flux.prototype.addStream = function(link){
+   var stream = this. _newStreamFromLink(link,this.streams.length);
+    this.streams.push(stream);
+    this.totalStreams++;
+};
