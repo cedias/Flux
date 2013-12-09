@@ -124,6 +124,19 @@ Flux.prototype.getLength = function(){
     return this.streams[this.currentStream].getLength();
 };
 
+/*------- Streams infos -----*/
+
+Flux.prototype.getState = function(index){
+    return this.streams[index].state;
+}
+
+Flux.prototype.getStreamType = function(index){
+    return this.streams[index].stream_type;
+}
+
+Flux.prototype.isStreamable = function(index){
+    return this.streams[index].streamable
+}
 /*------ Flux Methods------*/
 
 Flux.prototype.next = function(){

@@ -25,15 +25,26 @@
 
 		<div id="clear_bg">
 			<div class="container">
-			  	<h3> Choose a song below.</h3>
+			  	<h3> Choose a song below</h3>
 				<div id="tracks_div"> 
 					<ul id="tracks">
 						<li class="list-group-item track">https://soundcloud.com/waldemar-schwartz/park-lex</li>
-						<li class="list-group-item track">https://soundcloud.com/talkingcity1994/pas1123</li>
+						<li class="list-group-item track">https://soundcloud.com/in-the-blue-shirt/slight-intoxication</li>
 						<li class="list-group-item track">https://soundcloud.com/thompost/spazzkid-forgiveness-thompost</li>
 						<li class="list-group-item track">https://soundcloud.com/fishing/fishing-choy-lin</li>
 					</ul>
 				</div>
+				<h3> Add a new Soundcloud Link</h3>
+				
+				<form id="add_link_form" class="form-inline" role="form">
+				  <div class="form-group">
+				    <label class="sr-only" for="link_to_add">Song URL: </label>
+				    <input type="url" class="form-control" id="link_to_add" placeholder="Enter URL">
+				  </div>
+				  <button id="add_link" class="btn btn-default">Add</button>
+				  <a id="check_links">Check Dead Links</button>
+				</form>
+
 			</div>
 		</div>
 	

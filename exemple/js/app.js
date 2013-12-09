@@ -50,6 +50,35 @@ $(
 	    
 	});
 
+	/*Add Link*/
+	$("#add_link_form").on('submit',function() {
+
+		var link = $("#link_to_add").val();
+		if(link!==""){
+		player.addStream(link);
+		addLinkHTML(link);
+		$("#link_to_add").val("");
+		}
+		return false;
+	});
+
+	/*Check Links*/
+	$("#check_links").on('click',findNonWorkingStreams);
+
+	function findNonWorkingStreams(){
+		var errors = player.getErrorStreams();
+		var i;
+		for(i=0;i<errors.length;i++){
+			highlightErrors(errors[i]);
+		}
+		console.log(errors);
+		return false;
+	}
+
+	function highlightErrors(index){
+		$($('.track')[index]).addClass("noStream");
+	}
+
 
 	function switchInfo(index){
 	    var li = $(".track:eq("+index+")");
@@ -58,5 +87,18 @@ $(
 	    $("#playing").html("<b>Playing:</b> <a href=\""+li.html()+"\">"+li.html()+"</a>");
 
 	}
+	function addLinkHTML(link){
+		$("#tracks").append("<li class=\"list-group-item track\">"+link+"</li");
+
+		$('.track').off('click')
+		var items =  $('.track').on('click',function() {
+	    var index = items.index(this);
+	    player.selectStream(index);
+	    switchInfo(index);
+	    
+	});
+	};
+
+
 
     });
