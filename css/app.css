@@ -65,6 +65,10 @@ i:hover{
 	font-weight:bolder;
 }
 
+.noStream{
+	background: #f2dede;
+}
+
 
 #song_header a{
 	font-size:35px;
