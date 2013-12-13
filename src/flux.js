@@ -186,3 +186,13 @@ Flux.prototype.addStream = function(link){
     this.streams.push(stream);
     this.totalStreams++;
 };
+
+Flux.prototype.removeStream = function(index){
+    if(index === this.currentStream)
+        this.stop();
+    this.streams.splice(index,1);
+    this.totalStreams--;
+
+    if(this.currentStream > index)
+        this.currentStream--;
+}

@@ -1,5 +1,6 @@
 
 var app;
+var debug;
 
 $(
     app = function(){
@@ -21,6 +22,7 @@ $(
 	    onfinish:function(){switchInfo(player.currentStream)}
 	});
 
+	debug = player;
     	/*Play button*/
 	$("#play").on('click', function(){
 	    player.togglePlay();
@@ -43,12 +45,8 @@ $(
 
 
 	/*List choosing*/
-	var items =  $('.track').on('click',function() {
-	    var index = items.index(this);
-	    player.selectStream(index);
-	    switchInfo(index);
-	    
-	});
+	bindList();
+	
 
 	/*Add Link*/
 	$("#add_link_form").on('submit',function() {
@@ -65,6 +63,25 @@ $(
 	/*Check Links*/
 	$("#check_links").on('click',findNonWorkingStreams);
 
+
+
+	/*Delete Button*/
+	$("#remove_link_form").on('submit',function() {
+		console.log("ralo");
+		var link = $("#link_to_remove").val();
+		if(link!==""){
+		removeStream(link);
+		$("#link_to_remove").val("");
+		$($(".track")[link]).remove();
+		bindList();
+
+
+
+
+		}
+		return false;
+	});
+
 	function findNonWorkingStreams(){
 		var errors = player.getErrorStreams();
 		var i;
@@ -73,6 +90,10 @@ $(
 		}
 		console.log(errors);
 		return false;
+	}
+
+	function removeStream(index){
+		player.removeStream(index);
 	}
 
 	function highlightErrors(index){
@@ -89,15 +110,19 @@ $(
 	}
 	function addLinkHTML(link){
 		$("#tracks").append("<li class=\"list-group-item track\">"+link+"</li");
-
-		$('.track').off('click')
-		var items =  $('.track').on('click',function() {
-	    var index = items.index(this);
-	    player.selectStream(index);
-	    switchInfo(index);
-	    
-	});
+		bindList();
 	};
+
+	function bindList(){
+		$('.track').off('click');
+		var items =  $('.track').on('click',function() {
+		    var index = items.index(this);
+		    console.log("clik "+index);
+		    player.selectStream(index);
+		    switchInfo(index);
+		    
+		});
+	}
 
 
 
